@@ -1,0 +1,74 @@
+# Configuration for ACDC dataset
+dataset:
+  name: 'acdc'
+  data_path_tr: 'database/training'
+  data_path_tr_cropped: 'database/acdc_bias_corr_cropped'
+  
+  # Image properties
+  img_size: [192, 192]
+  target_resolution: [1.36719, 1.36719]
+  num_classes: 4
+  num_channels: 1
+  
+  # Train/val/test splits
+  train_ids: ['042', '062']  # Example: 2 labeled images
+  val_ids: ['031', '072']
+  test_ids: ['007', '008', '009', '010', '027', '028', '029', '030',
+             '047', '048', '049', '050', '067', '068', '069', '070',
+             '087', '088', '089', '090']
+  
+  # Unlabeled data
+  unlabeled_ids: ['001', '002', '003', '004', '005', '006', '017', '018', 
+                   '019', '020', '012', '021', '022', '023', '024', '025',
+                   '026', '037', '038', '039', '040', '041', '042', '043',
+                   '044', '045', '046', '057', '058', '059', '060', '061',
+                   '062', '063', '064', '065', '066', '077', '078', '079',
+                   '080', '072', '081', '082', '083', '084', '085', '086',
+                   '097', '098', '099', '100']
+
+model:
+  base_channels: 16
+  embed_dim: 16
+  interp_method: 'nearest'  # 'nearest' or 'bilinear'
+
+training:
+  # Baselines training
+  baseline_epochs: 500
+  baseline_lr: 0.001
+  baseline_batch_size: 20
+  
+  # Joint training
+  joint_epochs: 50
+  joint_iterations: 3  # Number of pseudo-label update iterations
+  joint_lr: 0.001
+  joint_batch_size_labeled: 20
+  joint_batch_size_contrastive: 10
+  
+  # Loss weights
+  lambda_contrastive: 0.01  # Weight for contrastive loss
+  
+  # Contrastive loss parameters
+  temperature: 0.2
+  num_pos_samples: 3
+  num_neg_samples_per_class: 3
+  inter_image_matching: false  # Whether to match across images
+  
+  # Validation
+  val_step_update: 10
+  
+  # Pseudo-labeling
+  test_aug_overlap: false  # Test augmentation consistency
+  test_f1_threshold: 0.9
+
+augmentation:
+  type: 'standard'  # 'basic', 'standard', or 'strong'
+  random_deformations: true
+  random_intensity: true
+  sigma_deformation: 5
+
+paths:
+  save_dir: './experiments'
+  best_model_dir: 'best_models'
+  
+structure_names: ['rv', 'myo', 'lv']  # Foreground class names
+

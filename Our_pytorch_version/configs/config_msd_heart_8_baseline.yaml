@@ -1,0 +1,65 @@
+# Configuration for MSD Heart  dataset
+dataset:
+  name: 'msd_heart'
+  data_path_tr: 'database/msd_heart_bias_corr'
+  data_path_tr_cropped: 'database/msd_heart_bias_corr_cropped'
+  
+  # Image properties
+  img_size: [192, 192]              
+  target_resolution: [1.36719, 1.36719]   
+  num_classes: 2                
+  num_channels: 1           
+  
+  # Train/val/test splits
+  train_ids: ['03', '04', '05', '07', '09', '24', '26', '30']
+  val_ids: ['10', '11','14', '16', '17', '26']
+  test_ids: ['18', '19', '20', '21', '22', '23']
+  
+  # Unlabeled data (si semi-supervisé)
+  #unlabeled_ids: ['31', '32', '33', '34', '35', '36', '37', '38', '39', '40']
+
+model:
+  base_channels: 16
+  embed_dim: 16
+  interp_method: 'nearest'  # 'nearest' or 'bilinear'
+
+training:
+  # Baseline training
+  baseline_epochs: 500
+  baseline_lr: 0.001
+  baseline_batch_size: 10    # MR volumes un peu plus gros, batch plus petit
+  
+  # Joint training
+  joint_epochs: 50
+  joint_iterations: 3        # Nombre d’itérations pseudo-label
+  joint_lr: 0.001
+  joint_batch_size_labeled: 10
+  joint_batch_size_contrastive: 5
+  
+  # Loss weights
+  lambda_contrastive: 0.1   # Poids de la loss contrastive
+  
+  # Contrastive loss parameters
+  temperature: 0.2
+  num_pos_samples: 3
+  num_neg_samples_per_class: 3
+  inter_image_matching: false  # Pas d’appariement entre volumes différents
+  
+  # Validation
+  val_step_update: 10
+  
+  # Pseudo-labeling
+  test_aug_overlap: false
+  test_f1_threshold: 0.9
+
+augmentation:
+  type: 'standard'            # 'basic', 'standard' ou 'strong'
+  random_deformations: true
+  random_intensity: true
+  sigma_deformation: 5
+
+paths:
+  save_dir: './experiments_msd_heart_8_baseline'
+  best_model_dir: 'best_models'
+  
+structure_names: ['heart']

@@ -1,0 +1,66 @@
+# Configuration for CHAOS MR-T2 dataset
+dataset:
+  name: 'chaos'
+  data_path_tr: 'database/chaos_bias_corr'
+  data_path_tr_cropped: 'database/chaos_bias_corr_cropped'
+  
+  # Image properties
+  img_size: [192, 192]              
+  target_resolution: [1.6, 1.6]     
+  num_classes: 5                    # 0-background, 1-liver, 2-right kidney, 3-left kidney, 4-spleen
+  num_channels: 1                  
+  
+  # Train/val/test splits 
+  train_ids: ['001', '002', '003', '005','015', '019', '020', '021']
+  val_ids: ['036', '037', '038', '039']
+  test_ids: ['016', '017']
+  
+  # Unlabeled data
+  unlabeled_ids: ['008', '010','013', '022','031','032','033','034']
+
+model:
+  base_channels: 16
+  embed_dim: 16
+  interp_method: 'nearest'  # 'nearest' or 'bilinear'
+
+training:
+  # Baseline training
+  baseline_epochs: 50
+  baseline_lr: 0.001
+  baseline_batch_size: 10   
+  
+  # Joint training
+  joint_epochs: 50
+  joint_iterations: 3        # Nombre d’itérations pseudo-label
+  joint_lr: 0.001
+  joint_batch_size_labeled: 10
+  joint_batch_size_contrastive: 5
+  
+  # Loss weights
+  lambda_contrastive: 0.05   # Poids de la loss contrastive
+  
+  # Contrastive loss parameters
+  temperature: 0.2
+  num_pos_samples: 3
+  num_neg_samples_per_class: 3
+  inter_image_matching: false  # Pas d’appariement entre volumes différents
+  
+  # Validation
+  val_step_update: 10
+  
+  # Pseudo-labeling
+  test_aug_overlap: false
+  test_f1_threshold: 0.9
+
+augmentation:
+  type: 'standard'            # 'basic', 'standard' ou 'strong'
+  random_deformations: true
+  random_intensity: true
+  sigma_deformation: 5
+
+paths:
+  save_dir: './experiments_chaos_8'
+  best_model_dir: 'best_models'
+  
+# noms des structures annotées dans CHAOS 
+structure_names: ['liver', 'right_kidney', 'left_kidney', 'spleen']
