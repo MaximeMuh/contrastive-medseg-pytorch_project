@@ -1,4 +1,8 @@
+**`report_project.pdf`** — please refer to this file for a complete description of the project.
+
 # Semi-Supervised Medical Image Segmentation with Local Contrastive Loss (PyTorch Version)
+
+**Authors**: Nicolas Beaujoin, Maxime Muhlethaler, Titouan Pottier
 
 This repository contains a PyTorch re-implementation of the method described in the paper: *"Local Contrastive Loss with Pseudo-label based Self-training for Semi-supervised Medical Image Segmentation"*.
 
